@@ -1,0 +1,41 @@
+{
+    "info": {
+      "name": "Churn Prediction API",
+      "_postman_id": "d5a9d1cd-1111-1111-1111-222222222222",
+      "description": "Test cases for churn prediction API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Predict churn - Test Case 1",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": ""
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/predict",
+            "protocol": "http",
+            "host": [
+              "127",
+              "0",
+              "0",
+              "1"
+            ],
+            "port": "8000",
+            "path": [
+              "predict"
+            ]
+          }
+        }
+      }
+    ]
+  }
+  
