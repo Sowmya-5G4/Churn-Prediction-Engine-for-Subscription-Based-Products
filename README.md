@@ -1,129 +1,207 @@
-📊 Churn Prediction Engine for Subscription-Based Products
-🚀 Overview
-This project is a Churn Prediction Engine designed for subscription-based products.
-It consists of two main components:
+# 📊 Churn Prediction Engine for Subscription-Based Products
 
-🔷 A FastAPI microservice for real-time churn predictions.
+## Overview
 
-🔷 An Airflow pipeline for periodic model retraining.
+This project implements an **end-to-end churn prediction system** designed for subscription-based products, focusing on **real-world MLOps practices** rather than just model training.
 
-It helps businesses predict customer churn and proactively improve customer retention.
+The system combines:
 
-🗂️ Project Structure
+* **Real-time churn prediction** via a FastAPI microservice
+* **Automated model retraining** using Apache Airflow
+* **Containerized deployment** using Docker
 
+The goal is to demonstrate how machine learning models are **trained, retrained, and served reliably in production-style environments**.
+
+---
+
+## High-Level Architecture
+
+```
+Customer Data
+   ↓
+Model Training (XGBoost)
+   ↓
+Scheduled Retraining (Airflow DAG)
+   ↓
+Saved Artifacts (model.pkl, scaler.pkl)
+   ↓
+FastAPI Service
+   ↓
+REST API (/predict)
+   ↓
+Churn Probability Output
+```
+
+---
+
+## Project Structure
+
+```
 Churn_prediction_project/
 ├── airflow/
 │   └── docker-airflow/
 │       ├── dags/
-│       │   ├── churn_training_dag.py      # Airflow DAG: retrain pipeline
-│       │   ├── model.py                   # ML training script
-│       │   ├── churn.csv                  # Training dataset
-│       ├── docker-compose-LocalExecutor.yml   # Airflow Docker setup
+│       │   ├── churn_training_dag.py   # Airflow DAG for retraining
+│       │   ├── model.py                # Training & preprocessing logic
+│       │   ├── churn.csv               # Training dataset
+│       ├── docker-compose-LocalExecutor.yml
 │       ├── .env
-│       ├── logs/                          # Airflow logs (optional)
-│       ├── plugins/                       # (optional)
+│       ├── logs/
+│       └── plugins/
 │
 ├── fastapi-app/
-│   ├── app.py                     # FastAPI service
-│   ├── requirements.txt           # Python dependencies
-│   ├── Dockerfile                 # Containerize FastAPI app
-│   ├── sample_input.json          # Example prediction input
+│   ├── app.py                          # FastAPI application
+│   ├── requirements.txt               # API dependencies
+│   ├── Dockerfile                     # Containerize FastAPI app
+│   ├── sample_input.json              # Example request payload
+│   └── README.md
 │
-├── README.md                      # Project documentation
 ├── .gitignore
-✨ Features
-✅ Predict churn probability for individual customers in real time.
-✅ Schedule periodic retraining on updated data.
-✅ Scalable and containerized with Docker.
-✅ Clear and modular code with Airflow orchestration and FastAPI serving.
+└── README.md
+```
 
-⚡ FastAPI Service
-📄 What it does
-Loads the trained churn prediction model (model.pkl) and scaler.
+---
 
-Exposes a REST endpoint /predict to serve predictions.
+## Key Features
 
-Takes a JSON array of customer features and returns churn probabilities or labels.
+* ✅ Predict churn probability for individual customers in real time
+* ✅ Automated model retraining using Airflow scheduling
+* ✅ Separation of training and serving concerns
+* ✅ Dockerized services for reproducibility
+* ✅ Clean, modular, and production-oriented code structure
 
-🛠️ Run FastAPI Locally
+---
 
+## FastAPI Service
+
+### What It Does
+
+* Loads trained model (`model.pkl`) and feature scaler (`scaler.pkl`)
+* Exposes a REST endpoint `/predict`
+* Accepts JSON input containing customer features
+* Returns churn probability or classification
+
+### Run FastAPI Locally
+
+```bash
 cd fastapi-app
 pip install -r requirements.txt
-python app.py
-Or with Uvicorn:
-
-bash
-Copy
-Edit
 uvicorn app:app --reload
-🌐 Test the API
-Go to:
-➡️ http://127.0.0.1:8000/docs
-You can upload sample_input.json here to test predictions.
+```
 
-🛞 Airflow Retraining Pipeline
-📄 What it does
-Loads churn.csv dataset.
+### Test the API
 
-Preprocesses & trains a churn prediction model.
+Open your browser and navigate to:
 
-Outputs:
+```
+http://127.0.0.1:8000/docs
+```
 
-model.pkl: trained model
+Use `sample_input.json` to test predictions via Swagger UI.
 
-scaler.pkl: feature scaler
+---
 
-sample_input.json: sample test input
+## Airflow Retraining Pipeline
 
-🛠️ Run Airflow Locally with Docker
+### What It Does
 
+* Loads historical churn data (`churn.csv`)
+* Performs preprocessing and model training (XGBoost)
+* Saves artifacts:
+
+  * `model.pkl`
+  * `scaler.pkl`
+  * `sample_input.json`
+
+### Run Airflow Locally (Docker)
+
+```bash
 cd airflow/docker-airflow
 
-# Initialize Airflow database
 docker-compose -f docker-compose-LocalExecutor.yml up airflow-init
 
-# Start Airflow services
 docker-compose -f docker-compose-LocalExecutor.yml up
-🌐 Access Airflow UI
-➡️ http://localhost:8080
+```
+
+### Access Airflow UI
+
+```
+http://localhost:8080
+```
+
 Login:
 
-username: airflow
-password: airflow
-✅ Enable the DAG: churn_retraining
-✅ Trigger it manually from UI.
-✅ Check logs to confirm retraining was successful.
+* **Username:** airflow
+* **Password:** airflow
 
-📦 Technologies Used
-🐍 Python
+Steps:
 
-⚡ FastAPI
+1. Enable DAG `churn_retraining`
+2. Trigger the DAG manually
+3. Monitor logs for successful retraining
 
-🛞 Apache Airflow
+---
 
-🐳 Docker
+## Technologies Used
 
-📊 scikit-learn, XGBoost, Pandas
+* Python
+* FastAPI
+* Apache Airflow
+* Docker & Docker Compose
+* XGBoost
+* scikit-learn
+* Pandas & NumPy
+* Uvicorn
+* REST APIs
 
-🚀 Setup & Deployment
-🔷 Clone the repository
+---
 
+## Setup Instructions
+
+### Clone the Repository
+
+```bash
 git clone https://github.com/Sowmya-5G4/Churn-Prediction-Engine-for-Subscription-Based-Products.git
 cd Churn-Prediction-Engine-for-Subscription-Based-Products
-🔷 Setup FastAPI
+```
 
+### Start FastAPI
+
+```bash
 cd fastapi-app
 pip install -r requirements.txt
 uvicorn app:app --reload
-🔷 Setup Airflow
+```
 
+### Start Airflow
+
+```bash
 cd airflow/docker-airflow
 docker-compose -f docker-compose-LocalExecutor.yml up airflow-init
 docker-compose -f docker-compose-LocalExecutor.yml up
-📋 Notes
-✅ Make sure churn.csv is present in the dags/ folder.
-✅ Outputs of retraining (model.pkl, scaler.pkl, sample_input.json) are saved in dags/.
-✅ Old task failures remain in Airflow UI — focus on latest run results.
+```
 
+---
 
+## Notes
 
+* Ensure `churn.csv` is present in the `dags/` directory
+* Retrained artifacts are stored inside `dags/`
+* Old DAG failures may appear in UI; focus on latest run
+
+---
+
+## What This Project Demonstrates
+
+* End-to-end MLOps pipeline design
+* Automated retraining workflows
+* Model serving via APIs
+* Containerized ML systems
+* Separation of training and inference
+* Production-style ML engineering practices
+
+---
+
+## Author
+
+Built as a **learning and portfolio project** to demonstrate **practical MLOps system design, model lifecycle management, and API-based ML deployment**.
